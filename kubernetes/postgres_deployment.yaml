@@ -1,0 +1,38 @@
+#deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-portal-postgresql-deployment
+  labels:
+    app: app-portal-postgresql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-portal-postgresql
+  template:
+    metadata:
+      labels:
+        app: app-portal-postgresql
+    spec:
+      containers:
+      - name: app-portal-postgresql-container
+        image: postgres:17
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "portalDb"
+        - name: POSTGRES_USER
+          value: "user"
+        - name: POSTGRES_PASSWORD
+          value: password
+        - name: PGDATA
+          value: "/var/lib/postgresql/data/pgdata"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"

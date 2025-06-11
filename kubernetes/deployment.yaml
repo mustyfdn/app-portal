@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-portal-deployment
+  labels:
+    app: app-portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-portal
+  template:
+    metadata:
+      labels:
+        app: app-portal
+    spec:
+      containers:
+      - name: app-portal-container
+        image: mustyfdn/app-portal:v2
+        ports:
+        - containerPort: 3000
+        env:
+        - name: COMPANY_NAME
+          value: "Example"
+        - name: COMPANY_ICON_URL
+          value: "https://example-url.com/icon.png"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: app-portal-config
+          mountPath: /usr/src/app/.env
+          subPath: .env
+      volumes:
+      - name: app-portal-config
+        secret:
+          secretName: app-portal-config
+
